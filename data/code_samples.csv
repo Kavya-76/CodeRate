@@ -1,0 +1,7 @@
+code,score
+"def add(a, b): return a + b",60
+"for i in range(10): print(i)",50
+"def fact(n):\n    if n==0:\n        return 1\n    else:\n        return n*fact(n-1)",90
+"print('Hello')",30
+"x = [i**2 for i in range(100)]
+print(sum(x))",70
