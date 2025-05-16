@@ -8,7 +8,7 @@ def extract_features(code: str) -> list:
     # Lexical analysis
     tokens = list(tokenize.tokenize(BytesIO(code.encode('utf-8')).readline))
     features['num_tokens'] = len([t for t in tokens if t.type not in [tokenize.ENCODING, tokenize.ENDMARKER]])
-    features['num_keywords'] = sum(1 for t in tokens if t.type == tokenize.NAME and t.string in {'for', 'if', 'def', 'return', 'while'})
+    features['num_keywords'] = sum(1 for t in tokens if t.type == tokenize.NAME and t.string in {'for', 'if', 'def', 'return', 'while', 'try', 'except', 'with', 'class'})
     features['num_operators'] = sum(1 for t in tokens if t.string in {'+', '-', '*', '/', '**', '=', '==', '<', '>', '>=', '<='})
 
     # Syntactic analysis
@@ -17,5 +17,6 @@ def extract_features(code: str) -> list:
     features['num_for_loops'] = sum(isinstance(n, ast.For) for n in ast.walk(tree))
     features['num_if_statements'] = sum(isinstance(n, ast.If) for n in ast.walk(tree))
     features['num_calls'] = sum(isinstance(n, ast.Call) for n in ast.walk(tree))
+    features['num_classes'] = sum(isinstance(n, ast.ClassDef) for n in ast.walk(tree))
 
     return list(features.values())

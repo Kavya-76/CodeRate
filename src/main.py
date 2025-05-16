@@ -16,8 +16,11 @@ def main():
             code_lines.append(line)
 
         code_input = "\n".join(code_lines)
-        score = scorer.predict_score(code_input)
-        print(f"\nPredicted Score: {score}/100")
+        try:
+            score = scorer.predict_score(code_input)
+            print(f"\nPredicted Score: {score}/100")
+        except Exception as e:
+            print(f"Error processing code: {e}")
 
 if __name__ == '__main__':
     main()
