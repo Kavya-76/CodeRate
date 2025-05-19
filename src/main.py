@@ -1,4 +1,4 @@
-from src.model import CodeScoringModel
+from model import CodeScoringModel
 
 def main():
     scorer = CodeScoringModel()
