@@ -1,0 +1,6 @@
+function_count,variable_count,binop_count,avg_param_count,function_call_count,score
+1,2,1,2.0,1,60
+2,5,3,1.5,2,85
+0,1,0,0.0,0,30
+3,7,4,2.0,3,95
+2,3,2,1.0,1,70

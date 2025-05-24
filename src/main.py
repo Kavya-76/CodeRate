@@ -1,26 +1,38 @@
-from model import CodeScoringModel
+# src/main.py
+
+from core.evaluator import evaluate_code
 
 def main():
-    scorer = CodeScoringModel()
-    scorer.train_from_csv("data/code_samples.csv")
+    print("=== Code Scorer CLI ===")
+    print("Enter your Python code (end input with an empty line):")
 
+    # Read multiline input from user until an empty line is entered
+    lines = []
     while True:
-        print("\nPaste your Python code (type 'exit' to quit):")
-        code_lines = []
-        while True:
-            line = input()
-            if line.lower() == 'exit':
-                return
-            if line == '':
-                break
-            code_lines.append(line)
+        line = input()
+        if line.strip() == "":
+            break
+        lines.append(line)
+    code = "\n".join(lines)
 
-        code_input = "\n".join(code_lines)
-        try:
-            score = scorer.predict_score(code_input)
-            print(f"\nPredicted Score: {score}/100")
-        except Exception as e:
-            print(f"Error processing code: {e}")
+    print("\nEvaluating your code...\n")
 
-if __name__ == '__main__':
+    result = evaluate_code(code)
+    print(result)
+
+    if result["status"] == "success":
+        print(f"✅ Code is valid!")
+        print(f"Score: {result['score']}/100")
+        print("Extracted features:")
+        for feature, value in result["features"].items():
+            print(f"  - {feature}: {value}")
+    else:
+        print(f"❌ Error during {result.get('stage', 'unknown')} analysis:")
+        print(result.get("message", "Unknown error"))
+        if "errors" in result:
+            print("Details:")
+            for err in result["errors"]:
+                print(f"  - {err}")
+
+if __name__ == "__main__":
     main()
