@@ -1,17 +1,14 @@
-# src/core/evaluator.py
-
 from lexer.lexer import perform_lexical_analysis
 from parser.parser import perform_syntax_analysis
 from semantic.semantic_analyzer import perform_semantic_analysis
 from features.feature_extractor import extract_features
 from ml_model.model import predict_score
+from utils.formatting import format_ast_tree  # Make sure to import it correctly
 
-def evaluate_code(code: str):
+def evaluate_code(code: str, debug: bool = False):
     try:
-        # Step 1: Lexical Analysis (for validation and debugging)
+        # Lexical Analysis
         tokens = perform_lexical_analysis(code)
-        print("Lexical analysis done")
-
         if not tokens:
             return {
                 "status": "error",
@@ -19,16 +16,9 @@ def evaluate_code(code: str):
                 "message": "Lexical analysis failed. No valid tokens found."
             }
 
-        # Step 2: Syntax Analysis (pass the original code, not tokens)
+        # Syntax Analysis
         try:
-            ast = perform_syntax_analysis(code)  # ✅ Pass code string, not tokens
-            print("AST generation done")
-            
-            # Optional: Print tokens for debugging
-            print("Tokens found:")
-            for token in tokens:
-                print(token)
-                
+            ast = perform_syntax_analysis(code)
         except SyntaxError as se:
             return {
                 "status": "error",
@@ -36,33 +26,44 @@ def evaluate_code(code: str):
                 "message": str(se)
             }
 
-        # Step 3: Semantic Analysis
+        # Semantic Analysis
         semantic_errors = perform_semantic_analysis(ast)
         if semantic_errors:
             return {
                 "status": "error",
                 "stage": "semantic",
                 "message": "Semantic analysis failed.",
-                "errors": semantic_errors
+                "errors": semantic_errors,
+                "tokens": [f"{t.type}: {t.value}" for t in tokens],
+                "ast_tree": format_ast_tree(ast)
             }
 
-        # Step 4: Feature Extraction
+        # Feature Extraction
         features = extract_features(ast)
 
-        # Step 5: ML Scoring
+        # ML Score
         try:
             score = predict_score(features)
         except Exception as ml_error:
             return {
                 "status": "error",
                 "stage": "ml",
-                "message": f"ML prediction failed: {str(ml_error)}"
+                "message": f"ML prediction failed: {str(ml_error)}",
+                "tokens": [f"{t.type}: {t.value}" for t in tokens],
+                "ast_tree": format_ast_tree(ast),
+                "features": features
             }
 
         return {
             "status": "success",
+            "tokens": [f"{t.type}: {t.value}" for t in tokens],
+            "ast_tree": format_ast_tree(ast),
+            "features": features,
             "score": score,
-            "features": features
+            "debug_info": {
+                "raw_ast": repr(ast),
+                "raw_tokens": [str(t) for t in tokens]
+            } if debug else None
         }
 
     except Exception as e:
