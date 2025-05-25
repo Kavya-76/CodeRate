@@ -9,6 +9,7 @@ import { toast } from "sonner"
 import { Code, Play, Sparkles } from "lucide-react";
 import axios from "axios"
 import "./App.css";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 interface AnalysisResult {
   status: string;
@@ -32,6 +33,7 @@ function App() {
     null
   );
 
+
   const handleSubmitCode = async () => {
     if (!code.trim()) {
       toast.error("Please enter some code to analyze");
@@ -41,7 +43,7 @@ function App() {
     setIsAnalyzing(true);
 
     try {
-      const result = await axios.post("http://127.0.0.1:5000/api/analyze", {
+      const result = await axios.post(`${backendURL}/api/analyze`, {
         code: code
       })
 
