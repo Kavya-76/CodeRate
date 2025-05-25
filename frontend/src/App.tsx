@@ -1,67 +1,70 @@
-import { useState } from 'react';
-import { Button } from './components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { CodeEditor } from '@/components/CodeEditor';
-import { CodeShortcuts } from '@/components/CodeShortcuts';
-import { AnalysisResults } from '@/components/AnalysisResults';
-import { toast } from 'sonner';
-import { Code, Play, Sparkles } from 'lucide-react';
-import "./App.css"
+import { useState } from "react";
+import { Button } from "./components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { CodeEditor } from "@/components/CodeEditor";
+import { CodeShortcuts } from "@/components/CodeShortcuts";
+import { AnalysisResults } from "@/components/AnalysisResults";
+import { toast } from "sonner";
+import { Code, Play, Sparkles } from "lucide-react";
+import axios from "axios"
+import "./App.css";
 
 interface AnalysisResult {
-  lexicalAnalysis: string;
-  syntaxAnalysis: string;
-  semanticAnalysis: string;
+  status: string;
+  tokens: string[];
+  ast_tree: string;
+  features: {
+    function_count: number;
+    variable_count: number;
+    binop_count: number;
+    avg_param_count: number;
+    function_call_count: number;
+  };
   score: number;
+  debug_info?: string | null;
 }
 
 function App() {
-   const [code, setCode] = useState('# Enter your Python code here\nprint("Hello, CodeRate!")');
+  const [code, setCode] = useState("# Enter your Python code here");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null
+  );
 
   const handleSubmitCode = async () => {
     if (!code.trim()) {
-      toast.error('Please enter some code to analyze');
+      toast.error("Please enter some code to analyze");
       return;
     }
 
     setIsAnalyzing(true);
-    
+
     try {
-      // This is where you'll make the API call to your backend
-      // For now, I'll simulate the API call with mock data
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API delay
-      
-      // Mock response - replace with actual API call
-      const mockResult: AnalysisResult = {
-        lexicalAnalysis: "Tokens identified: keywords (print, def), identifiers (hello_world), literals ('Hello, World!'), operators, delimiters. All tokens are valid Python lexemes.",
-        syntaxAnalysis: "Code follows proper Python syntax. Indentation is correct. Function definition syntax is valid. Print statement structure is appropriate.",
-        semanticAnalysis: "Function 'hello_world' is properly defined and called. No undefined variables or scope issues detected. Code logic is semantically correct.",
-        score: Math.floor(Math.random() * 30) + 70 // Random score between 70-100
-      };
-      
-      setAnalysisResult(mockResult);
-      toast.success('Code analysis completed successfully!');
+      const result = await axios.post("http://127.0.0.1:5000/api/analyze", {
+        code: code
+      })
+      console.log(result.data)
+      setAnalysisResult(result.data);
+      toast.success("Code analysis completed successfully!");
     } catch (error) {
-      toast.error('Failed to analyze code. Please try again.');
-      console.error('Analysis error:', error);
+      toast.error("Failed to analyze code. Please try again.");
+      console.error("Analysis error:", error);
     } finally {
       setIsAnalyzing(false);
     }
   };
 
   const handleCodeInsert = (codeSnippet: string) => {
-    setCode(prevCode => prevCode + '\n\n' + codeSnippet);
+    setCode((prevCode) => prevCode + "\n\n" + codeSnippet);
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'bg-green-500';
-    if (score >= 70) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (score >= 90) return "bg-green-500";
+    if (score >= 70) return "bg-yellow-500";
+    return "bg-red-500";
   };
 
   return (
@@ -78,7 +81,10 @@ function App() {
                 CodeRate
               </h1>
             </div>
-            <Badge variant="outline" className="text-purple-300 border-purple-400">
+            <Badge
+              variant="outline"
+              className="text-purple-300 border-purple-400"
+            >
               <Sparkles className="h-4 w-4 mr-1" />
               AI-Powered Analysis
             </Badge>
@@ -101,9 +107,9 @@ function App() {
                 <CodeEditor value={code} onChange={setCode} />
                 <div className="flex justify-between items-center">
                   <div className="text-sm text-gray-400">
-                    Lines: {code.split('\n').length} | Characters: {code.length}
+                    Lines: {code.split("\n").length} | Characters: {code.length}
                   </div>
-                  <Button 
+                  <Button
                     onClick={handleSubmitCode}
                     disabled={isAnalyzing}
                     className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
@@ -126,9 +132,9 @@ function App() {
 
             {/* Analysis Results */}
             {analysisResult && (
-              <AnalysisResults 
-                result={analysisResult} 
-                scoreColor={getScoreColor(analysisResult.score)} 
+              <AnalysisResults
+                result={analysisResult}
+                scoreColor={getScoreColor(analysisResult.score)}
               />
             )}
           </div>
@@ -136,7 +142,7 @@ function App() {
           {/* Code Shortcuts Section */}
           <div className="space-y-6">
             <CodeShortcuts onCodeInsert={handleCodeInsert} />
-            
+
             {/* Tips Card */}
             <Card className="bg-black/40 backdrop-blur-md border-white/10">
               <CardHeader>
@@ -158,4 +164,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

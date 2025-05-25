@@ -1,38 +1,53 @@
 # src/main.py
 
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from core.evaluator import evaluate_code
 
-def main():
-    print("=== Code Scorer CLI ===")
-    print("Enter your Python code (end input with an empty line):")
+app = Flask(__name__)
+CORS(app)  # Allows frontend to connect (avoid CORS issues)
 
-    # Read multiline input from user until an empty line is entered
-    lines = []
-    while True:
-        line = input()
-        if line.strip() == "":
-            break
-        lines.append(line)
-    code = "\n".join(lines)
+@app.route('/api/analyze', methods=['POST'])
+def analyze_code():
+    data = request.get_json()
+    code = data.get('code', '')
+    print(code)
 
-    print("\nEvaluating your code...\n")
+    if not code.strip():
+        return jsonify({
+            "status": "error",
+            "message": "Code input is empty"
+        }), 400
 
     result = evaluate_code(code)
     print(result)
 
+    # return jsonify({"message": "Code Scorer API is running"}), 200
     if result["status"] == "success":
-        print(f"✅ Code is valid!")
-        print(f"Score: {result['score']}/100")
-        print("Extracted features:")
-        for feature, value in result["features"].items():
-            print(f"  - {feature}: {value}")
+        formatted_tokens = result.get("tokens", [])
+
+        formatted_result = {
+            "status": "success",
+            "tokens": formatted_tokens,
+            "ast_tree": result.get("ast_tree", "Not available"),
+            "features": result.get("features", {}),
+            "score": result.get("score"),
+            "debug_info": result.get("debug_info", None)
+        }
+
+        return jsonify(formatted_result), 200
+
     else:
-        print(f"❌ Error during {result.get('stage', 'unknown')} analysis:")
-        print(result.get("message", "Unknown error"))
-        if "errors" in result:
-            print("Details:")
-            for err in result["errors"]:
-                print(f"  - {err}")
+        return jsonify({
+            "status": "error",
+            "stage": result.get("stage"),
+            "message": result.get("message"),
+            "errors": result.get("errors", [])
+        }), 400
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Code Scorer API is running"}), 200
 
 if __name__ == "__main__":
-    main()
+    app.run(debug=True)
