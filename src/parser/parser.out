@@ -5,7 +5,6 @@ Unused terminals:
     AS
     CLASS
     ELSE
-    EQUALS
     FALSE
     FOR
     FROM
@@ -22,68 +21,74 @@ Grammar
 
 Rule 0     S' -> program
 Rule 1     program -> statements
-Rule 2     statements -> statements statement
-Rule 3     statements -> statement
-Rule 4     statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
-Rule 5     statement -> expression
-Rule 6     statement -> expression NEWLINE
-Rule 7     params -> params COMMA IDENTIFIER
-Rule 8     params -> IDENTIFIER
-Rule 9     params -> <empty>
-Rule 10    expression -> expression PLUS expression
-Rule 11    expression -> expression MINUS expression
-Rule 12    expression -> expression TIMES expression
-Rule 13    expression -> expression DIVIDE expression
-Rule 14    expression -> NUMBER
-Rule 15    expression -> IDENTIFIER
-Rule 16    expression -> IDENTIFIER LPAREN args RPAREN
-Rule 17    expression -> PRINT LPAREN args RPAREN
-Rule 18    expression -> STRING
-Rule 19    args -> args COMMA expression
-Rule 20    args -> expression
-Rule 21    args -> <empty>
+Rule 2     program -> empty
+Rule 3     empty -> <empty>
+Rule 4     statements -> statements statement
+Rule 5     statements -> statements NEWLINE
+Rule 6     statements -> statement
+Rule 7     statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
+Rule 8     statement -> IDENTIFIER EQUALS expression
+Rule 9     statement -> IDENTIFIER EQUALS expression NEWLINE
+Rule 10    statement -> expression
+Rule 11    statement -> expression NEWLINE
+Rule 12    params -> params COMMA IDENTIFIER
+Rule 13    params -> IDENTIFIER
+Rule 14    params -> <empty>
+Rule 15    expression -> expression PLUS expression
+Rule 16    expression -> expression MINUS expression
+Rule 17    expression -> expression TIMES expression
+Rule 18    expression -> expression DIVIDE expression
+Rule 19    expression -> NUMBER
+Rule 20    expression -> IDENTIFIER
+Rule 21    expression -> IDENTIFIER LPAREN args RPAREN
+Rule 22    expression -> PRINT LPAREN args RPAREN
+Rule 23    expression -> STRING
+Rule 24    args -> args COMMA expression
+Rule 25    args -> expression
+Rule 26    args -> <empty>
 
 Terminals, with rules where they appear
 
 AS                   : 
 CLASS                : 
-COLON                : 4
-COMMA                : 7 19
-DEF                  : 4
-DIVIDE               : 13
+COLON                : 7
+COMMA                : 12 24
+DEF                  : 7
+DIVIDE               : 18
 ELSE                 : 
-EQUALS               : 
+EQUALS               : 8 9
 FALSE                : 
 FOR                  : 
 FROM                 : 
-IDENTIFIER           : 4 7 8 15 16
+IDENTIFIER           : 7 8 9 12 13 20 21
 IF                   : 
 IMPORT               : 
 IN                   : 
-LPAREN               : 4 16 17
-MINUS                : 11
-NEWLINE              : 4 6
+LPAREN               : 7 21 22
+MINUS                : 16
+NEWLINE              : 5 7 9 11
 NONE                 : 
-NUMBER               : 14
-PLUS                 : 10
-PRINT                : 17
+NUMBER               : 19
+PLUS                 : 15
+PRINT                : 22
 RANGE                : 
 RETURN               : 
-RPAREN               : 4 16 17
-STRING               : 18
-TIMES                : 12
+RPAREN               : 7 21 22
+STRING               : 23
+TIMES                : 17
 TRUE                 : 
 WHILE                : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-args                 : 16 17 19
-expression           : 5 6 10 10 11 11 12 12 13 13 19 20
-params               : 4 7
+args                 : 21 22 24
+empty                : 2
+expression           : 8 9 10 11 15 15 16 16 17 17 18 18 24 25
+params               : 7 12
 program              : 0
-statement            : 2 3
-statements           : 1 2
+statement            : 4 6
+statements           : 1 4 5
 
 Parsing method: LALR
 
@@ -91,31 +96,38 @@ state 0
 
     (0) S' -> . program
     (1) program -> . statements
-    (2) statements -> . statements statement
-    (3) statements -> . statement
-    (4) statement -> . DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
-    (5) statement -> . expression
-    (6) statement -> . expression NEWLINE
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (2) program -> . empty
+    (4) statements -> . statements statement
+    (5) statements -> . statements NEWLINE
+    (6) statements -> . statement
+    (3) empty -> .
+    (7) statement -> . DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
+    (8) statement -> . IDENTIFIER EQUALS expression
+    (9) statement -> . IDENTIFIER EQUALS expression NEWLINE
+    (10) statement -> . expression
+    (11) statement -> . expression NEWLINE
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    DEF             shift and go to state 4
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    $end            reduce using rule 3 (empty -> .)
+    DEF             shift and go to state 5
+    IDENTIFIER      shift and go to state 6
+    NUMBER          shift and go to state 8
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
     program                        shift and go to state 1
     statements                     shift and go to state 2
-    statement                      shift and go to state 3
-    expression                     shift and go to state 6
+    empty                          shift and go to state 3
+    statement                      shift and go to state 4
+    expression                     shift and go to state 7
 
 state 1
 
@@ -126,622 +138,704 @@ state 1
 state 2
 
     (1) program -> statements .
-    (2) statements -> statements . statement
-    (4) statement -> . DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
-    (5) statement -> . expression
-    (6) statement -> . expression NEWLINE
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (4) statements -> statements . statement
+    (5) statements -> statements . NEWLINE
+    (7) statement -> . DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE
+    (8) statement -> . IDENTIFIER EQUALS expression
+    (9) statement -> . IDENTIFIER EQUALS expression NEWLINE
+    (10) statement -> . expression
+    (11) statement -> . expression NEWLINE
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
     $end            reduce using rule 1 (program -> statements .)
-    DEF             shift and go to state 4
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NEWLINE         shift and go to state 12
+    DEF             shift and go to state 5
+    IDENTIFIER      shift and go to state 6
+    NUMBER          shift and go to state 8
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
-    statement                      shift and go to state 10
-    expression                     shift and go to state 6
+    statement                      shift and go to state 11
+    expression                     shift and go to state 7
 
 state 3
 
-    (3) statements -> statement .
+    (2) program -> empty .
 
-    DEF             reduce using rule 3 (statements -> statement .)
-    NUMBER          reduce using rule 3 (statements -> statement .)
-    IDENTIFIER      reduce using rule 3 (statements -> statement .)
-    PRINT           reduce using rule 3 (statements -> statement .)
-    STRING          reduce using rule 3 (statements -> statement .)
-    $end            reduce using rule 3 (statements -> statement .)
+    $end            reduce using rule 2 (program -> empty .)
 
 
 state 4
 
-    (4) statement -> DEF . IDENTIFIER LPAREN params RPAREN COLON NEWLINE
+    (6) statements -> statement .
 
-    IDENTIFIER      shift and go to state 11
+    NEWLINE         reduce using rule 6 (statements -> statement .)
+    DEF             reduce using rule 6 (statements -> statement .)
+    IDENTIFIER      reduce using rule 6 (statements -> statement .)
+    NUMBER          reduce using rule 6 (statements -> statement .)
+    PRINT           reduce using rule 6 (statements -> statement .)
+    STRING          reduce using rule 6 (statements -> statement .)
+    $end            reduce using rule 6 (statements -> statement .)
 
 
 state 5
 
-    (15) expression -> IDENTIFIER .
-    (16) expression -> IDENTIFIER . LPAREN args RPAREN
+    (7) statement -> DEF . IDENTIFIER LPAREN params RPAREN COLON NEWLINE
 
-    NEWLINE         reduce using rule 15 (expression -> IDENTIFIER .)
-    PLUS            reduce using rule 15 (expression -> IDENTIFIER .)
-    MINUS           reduce using rule 15 (expression -> IDENTIFIER .)
-    TIMES           reduce using rule 15 (expression -> IDENTIFIER .)
-    DIVIDE          reduce using rule 15 (expression -> IDENTIFIER .)
-    DEF             reduce using rule 15 (expression -> IDENTIFIER .)
-    NUMBER          reduce using rule 15 (expression -> IDENTIFIER .)
-    IDENTIFIER      reduce using rule 15 (expression -> IDENTIFIER .)
-    PRINT           reduce using rule 15 (expression -> IDENTIFIER .)
-    STRING          reduce using rule 15 (expression -> IDENTIFIER .)
-    $end            reduce using rule 15 (expression -> IDENTIFIER .)
-    RPAREN          reduce using rule 15 (expression -> IDENTIFIER .)
-    COMMA           reduce using rule 15 (expression -> IDENTIFIER .)
-    LPAREN          shift and go to state 12
+    IDENTIFIER      shift and go to state 13
 
 
 state 6
 
-    (5) statement -> expression .
-    (6) statement -> expression . NEWLINE
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (8) statement -> IDENTIFIER . EQUALS expression
+    (9) statement -> IDENTIFIER . EQUALS expression NEWLINE
+    (20) expression -> IDENTIFIER .
+    (21) expression -> IDENTIFIER . LPAREN args RPAREN
 
-    DEF             reduce using rule 5 (statement -> expression .)
-    NUMBER          reduce using rule 5 (statement -> expression .)
-    IDENTIFIER      reduce using rule 5 (statement -> expression .)
-    PRINT           reduce using rule 5 (statement -> expression .)
-    STRING          reduce using rule 5 (statement -> expression .)
-    $end            reduce using rule 5 (statement -> expression .)
-    NEWLINE         shift and go to state 13
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
+    EQUALS          shift and go to state 14
+    NEWLINE         reduce using rule 20 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 20 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 20 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 20 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 20 (expression -> IDENTIFIER .)
+    DEF             reduce using rule 20 (expression -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 20 (expression -> IDENTIFIER .)
+    NUMBER          reduce using rule 20 (expression -> IDENTIFIER .)
+    PRINT           reduce using rule 20 (expression -> IDENTIFIER .)
+    STRING          reduce using rule 20 (expression -> IDENTIFIER .)
+    $end            reduce using rule 20 (expression -> IDENTIFIER .)
+    LPAREN          shift and go to state 15
 
 
 state 7
 
-    (14) expression -> NUMBER .
+    (10) statement -> expression .
+    (11) statement -> expression . NEWLINE
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    NEWLINE         reduce using rule 14 (expression -> NUMBER .)
-    PLUS            reduce using rule 14 (expression -> NUMBER .)
-    MINUS           reduce using rule 14 (expression -> NUMBER .)
-    TIMES           reduce using rule 14 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 14 (expression -> NUMBER .)
-    DEF             reduce using rule 14 (expression -> NUMBER .)
-    NUMBER          reduce using rule 14 (expression -> NUMBER .)
-    IDENTIFIER      reduce using rule 14 (expression -> NUMBER .)
-    PRINT           reduce using rule 14 (expression -> NUMBER .)
-    STRING          reduce using rule 14 (expression -> NUMBER .)
-    $end            reduce using rule 14 (expression -> NUMBER .)
-    RPAREN          reduce using rule 14 (expression -> NUMBER .)
-    COMMA           reduce using rule 14 (expression -> NUMBER .)
+  ! shift/reduce conflict for NEWLINE resolved as shift
+    DEF             reduce using rule 10 (statement -> expression .)
+    IDENTIFIER      reduce using rule 10 (statement -> expression .)
+    NUMBER          reduce using rule 10 (statement -> expression .)
+    PRINT           reduce using rule 10 (statement -> expression .)
+    STRING          reduce using rule 10 (statement -> expression .)
+    $end            reduce using rule 10 (statement -> expression .)
+    NEWLINE         shift and go to state 16
+    PLUS            shift and go to state 17
+    MINUS           shift and go to state 18
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
+
+  ! NEWLINE         [ reduce using rule 10 (statement -> expression .) ]
 
 
 state 8
 
-    (17) expression -> PRINT . LPAREN args RPAREN
+    (19) expression -> NUMBER .
 
-    LPAREN          shift and go to state 18
+    NEWLINE         reduce using rule 19 (expression -> NUMBER .)
+    PLUS            reduce using rule 19 (expression -> NUMBER .)
+    MINUS           reduce using rule 19 (expression -> NUMBER .)
+    TIMES           reduce using rule 19 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 19 (expression -> NUMBER .)
+    DEF             reduce using rule 19 (expression -> NUMBER .)
+    IDENTIFIER      reduce using rule 19 (expression -> NUMBER .)
+    NUMBER          reduce using rule 19 (expression -> NUMBER .)
+    PRINT           reduce using rule 19 (expression -> NUMBER .)
+    STRING          reduce using rule 19 (expression -> NUMBER .)
+    $end            reduce using rule 19 (expression -> NUMBER .)
+    RPAREN          reduce using rule 19 (expression -> NUMBER .)
+    COMMA           reduce using rule 19 (expression -> NUMBER .)
 
 
 state 9
 
-    (18) expression -> STRING .
+    (22) expression -> PRINT . LPAREN args RPAREN
 
-    NEWLINE         reduce using rule 18 (expression -> STRING .)
-    PLUS            reduce using rule 18 (expression -> STRING .)
-    MINUS           reduce using rule 18 (expression -> STRING .)
-    TIMES           reduce using rule 18 (expression -> STRING .)
-    DIVIDE          reduce using rule 18 (expression -> STRING .)
-    DEF             reduce using rule 18 (expression -> STRING .)
-    NUMBER          reduce using rule 18 (expression -> STRING .)
-    IDENTIFIER      reduce using rule 18 (expression -> STRING .)
-    PRINT           reduce using rule 18 (expression -> STRING .)
-    STRING          reduce using rule 18 (expression -> STRING .)
-    $end            reduce using rule 18 (expression -> STRING .)
-    RPAREN          reduce using rule 18 (expression -> STRING .)
-    COMMA           reduce using rule 18 (expression -> STRING .)
+    LPAREN          shift and go to state 21
 
 
 state 10
 
-    (2) statements -> statements statement .
+    (23) expression -> STRING .
 
-    DEF             reduce using rule 2 (statements -> statements statement .)
-    NUMBER          reduce using rule 2 (statements -> statements statement .)
-    IDENTIFIER      reduce using rule 2 (statements -> statements statement .)
-    PRINT           reduce using rule 2 (statements -> statements statement .)
-    STRING          reduce using rule 2 (statements -> statements statement .)
-    $end            reduce using rule 2 (statements -> statements statement .)
+    NEWLINE         reduce using rule 23 (expression -> STRING .)
+    PLUS            reduce using rule 23 (expression -> STRING .)
+    MINUS           reduce using rule 23 (expression -> STRING .)
+    TIMES           reduce using rule 23 (expression -> STRING .)
+    DIVIDE          reduce using rule 23 (expression -> STRING .)
+    DEF             reduce using rule 23 (expression -> STRING .)
+    IDENTIFIER      reduce using rule 23 (expression -> STRING .)
+    NUMBER          reduce using rule 23 (expression -> STRING .)
+    PRINT           reduce using rule 23 (expression -> STRING .)
+    STRING          reduce using rule 23 (expression -> STRING .)
+    $end            reduce using rule 23 (expression -> STRING .)
+    RPAREN          reduce using rule 23 (expression -> STRING .)
+    COMMA           reduce using rule 23 (expression -> STRING .)
 
 
 state 11
 
-    (4) statement -> DEF IDENTIFIER . LPAREN params RPAREN COLON NEWLINE
+    (4) statements -> statements statement .
 
-    LPAREN          shift and go to state 19
+    NEWLINE         reduce using rule 4 (statements -> statements statement .)
+    DEF             reduce using rule 4 (statements -> statements statement .)
+    IDENTIFIER      reduce using rule 4 (statements -> statements statement .)
+    NUMBER          reduce using rule 4 (statements -> statements statement .)
+    PRINT           reduce using rule 4 (statements -> statements statement .)
+    STRING          reduce using rule 4 (statements -> statements statement .)
+    $end            reduce using rule 4 (statements -> statements statement .)
 
 
 state 12
 
-    (16) expression -> IDENTIFIER LPAREN . args RPAREN
-    (19) args -> . args COMMA expression
-    (20) args -> . expression
-    (21) args -> .
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (5) statements -> statements NEWLINE .
 
-    RPAREN          reduce using rule 21 (args -> .)
-    COMMA           reduce using rule 21 (args -> .)
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NEWLINE         reduce using rule 5 (statements -> statements NEWLINE .)
+    DEF             reduce using rule 5 (statements -> statements NEWLINE .)
+    IDENTIFIER      reduce using rule 5 (statements -> statements NEWLINE .)
+    NUMBER          reduce using rule 5 (statements -> statements NEWLINE .)
+    PRINT           reduce using rule 5 (statements -> statements NEWLINE .)
+    STRING          reduce using rule 5 (statements -> statements NEWLINE .)
+    $end            reduce using rule 5 (statements -> statements NEWLINE .)
 
-    args                           shift and go to state 20
-    expression                     shift and go to state 21
 
 state 13
 
-    (6) statement -> expression NEWLINE .
+    (7) statement -> DEF IDENTIFIER . LPAREN params RPAREN COLON NEWLINE
 
-    DEF             reduce using rule 6 (statement -> expression NEWLINE .)
-    NUMBER          reduce using rule 6 (statement -> expression NEWLINE .)
-    IDENTIFIER      reduce using rule 6 (statement -> expression NEWLINE .)
-    PRINT           reduce using rule 6 (statement -> expression NEWLINE .)
-    STRING          reduce using rule 6 (statement -> expression NEWLINE .)
-    $end            reduce using rule 6 (statement -> expression NEWLINE .)
+    LPAREN          shift and go to state 22
 
 
 state 14
 
-    (10) expression -> expression PLUS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (8) statement -> IDENTIFIER EQUALS . expression
+    (9) statement -> IDENTIFIER EQUALS . expression NEWLINE
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
-
-    expression                     shift and go to state 22
-
-state 15
-
-    (11) expression -> expression MINUS . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
-
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
-
-    expression                     shift and go to state 23
-
-state 16
-
-    (12) expression -> expression TIMES . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
-
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
     expression                     shift and go to state 24
 
+state 15
+
+    (21) expression -> IDENTIFIER LPAREN . args RPAREN
+    (24) args -> . args COMMA expression
+    (25) args -> . expression
+    (26) args -> .
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
+
+    RPAREN          reduce using rule 26 (args -> .)
+    COMMA           reduce using rule 26 (args -> .)
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
+
+    args                           shift and go to state 25
+    expression                     shift and go to state 26
+
+state 16
+
+    (11) statement -> expression NEWLINE .
+
+    NEWLINE         reduce using rule 11 (statement -> expression NEWLINE .)
+    DEF             reduce using rule 11 (statement -> expression NEWLINE .)
+    IDENTIFIER      reduce using rule 11 (statement -> expression NEWLINE .)
+    NUMBER          reduce using rule 11 (statement -> expression NEWLINE .)
+    PRINT           reduce using rule 11 (statement -> expression NEWLINE .)
+    STRING          reduce using rule 11 (statement -> expression NEWLINE .)
+    $end            reduce using rule 11 (statement -> expression NEWLINE .)
+
+
 state 17
 
-    (13) expression -> expression DIVIDE . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (15) expression -> expression PLUS . expression
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
-    expression                     shift and go to state 25
+    expression                     shift and go to state 27
 
 state 18
 
-    (17) expression -> PRINT LPAREN . args RPAREN
-    (19) args -> . args COMMA expression
-    (20) args -> . expression
-    (21) args -> .
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (16) expression -> expression MINUS . expression
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    RPAREN          reduce using rule 21 (args -> .)
-    COMMA           reduce using rule 21 (args -> .)
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
-    args                           shift and go to state 26
-    expression                     shift and go to state 21
+    expression                     shift and go to state 28
 
 state 19
 
-    (4) statement -> DEF IDENTIFIER LPAREN . params RPAREN COLON NEWLINE
-    (7) params -> . params COMMA IDENTIFIER
-    (8) params -> . IDENTIFIER
-    (9) params -> .
+    (17) expression -> expression TIMES . expression
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    IDENTIFIER      shift and go to state 27
-    RPAREN          reduce using rule 9 (params -> .)
-    COMMA           reduce using rule 9 (params -> .)
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
-    params                         shift and go to state 28
+    expression                     shift and go to state 29
 
 state 20
 
-    (16) expression -> IDENTIFIER LPAREN args . RPAREN
-    (19) args -> args . COMMA expression
+    (18) expression -> expression DIVIDE . expression
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    RPAREN          shift and go to state 29
-    COMMA           shift and go to state 30
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
+    expression                     shift and go to state 30
 
 state 21
 
-    (20) args -> expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (22) expression -> PRINT LPAREN . args RPAREN
+    (24) args -> . args COMMA expression
+    (25) args -> . expression
+    (26) args -> .
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    RPAREN          reduce using rule 20 (args -> expression .)
-    COMMA           reduce using rule 20 (args -> expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
+    RPAREN          reduce using rule 26 (args -> .)
+    COMMA           reduce using rule 26 (args -> .)
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
+    args                           shift and go to state 31
+    expression                     shift and go to state 26
 
 state 22
 
-    (10) expression -> expression PLUS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (7) statement -> DEF IDENTIFIER LPAREN . params RPAREN COLON NEWLINE
+    (12) params -> . params COMMA IDENTIFIER
+    (13) params -> . IDENTIFIER
+    (14) params -> .
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-    NEWLINE         reduce using rule 10 (expression -> expression PLUS expression .)
-    DEF             reduce using rule 10 (expression -> expression PLUS expression .)
-    NUMBER          reduce using rule 10 (expression -> expression PLUS expression .)
-    IDENTIFIER      reduce using rule 10 (expression -> expression PLUS expression .)
-    PRINT           reduce using rule 10 (expression -> expression PLUS expression .)
-    STRING          reduce using rule 10 (expression -> expression PLUS expression .)
-    $end            reduce using rule 10 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 10 (expression -> expression PLUS expression .)
-    COMMA           reduce using rule 10 (expression -> expression PLUS expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
+    IDENTIFIER      shift and go to state 32
+    RPAREN          reduce using rule 14 (params -> .)
+    COMMA           reduce using rule 14 (params -> .)
 
-  ! PLUS            [ reduce using rule 10 (expression -> expression PLUS expression .) ]
-  ! MINUS           [ reduce using rule 10 (expression -> expression PLUS expression .) ]
-  ! TIMES           [ reduce using rule 10 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 10 (expression -> expression PLUS expression .) ]
-
+    params                         shift and go to state 33
 
 state 23
 
-    (11) expression -> expression MINUS expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (20) expression -> IDENTIFIER .
+    (21) expression -> IDENTIFIER . LPAREN args RPAREN
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-    NEWLINE         reduce using rule 11 (expression -> expression MINUS expression .)
-    DEF             reduce using rule 11 (expression -> expression MINUS expression .)
-    NUMBER          reduce using rule 11 (expression -> expression MINUS expression .)
-    IDENTIFIER      reduce using rule 11 (expression -> expression MINUS expression .)
-    PRINT           reduce using rule 11 (expression -> expression MINUS expression .)
-    STRING          reduce using rule 11 (expression -> expression MINUS expression .)
-    $end            reduce using rule 11 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 11 (expression -> expression MINUS expression .)
-    COMMA           reduce using rule 11 (expression -> expression MINUS expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
-
-  ! PLUS            [ reduce using rule 11 (expression -> expression MINUS expression .) ]
-  ! MINUS           [ reduce using rule 11 (expression -> expression MINUS expression .) ]
-  ! TIMES           [ reduce using rule 11 (expression -> expression MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 11 (expression -> expression MINUS expression .) ]
+    NEWLINE         reduce using rule 20 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 20 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 20 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 20 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 20 (expression -> IDENTIFIER .)
+    DEF             reduce using rule 20 (expression -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 20 (expression -> IDENTIFIER .)
+    NUMBER          reduce using rule 20 (expression -> IDENTIFIER .)
+    PRINT           reduce using rule 20 (expression -> IDENTIFIER .)
+    STRING          reduce using rule 20 (expression -> IDENTIFIER .)
+    $end            reduce using rule 20 (expression -> IDENTIFIER .)
+    RPAREN          reduce using rule 20 (expression -> IDENTIFIER .)
+    COMMA           reduce using rule 20 (expression -> IDENTIFIER .)
+    LPAREN          shift and go to state 15
 
 
 state 24
 
-    (12) expression -> expression TIMES expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (8) statement -> IDENTIFIER EQUALS expression .
+    (9) statement -> IDENTIFIER EQUALS expression . NEWLINE
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-    NEWLINE         reduce using rule 12 (expression -> expression TIMES expression .)
-    DEF             reduce using rule 12 (expression -> expression TIMES expression .)
-    NUMBER          reduce using rule 12 (expression -> expression TIMES expression .)
-    IDENTIFIER      reduce using rule 12 (expression -> expression TIMES expression .)
-    PRINT           reduce using rule 12 (expression -> expression TIMES expression .)
-    STRING          reduce using rule 12 (expression -> expression TIMES expression .)
-    $end            reduce using rule 12 (expression -> expression TIMES expression .)
-    RPAREN          reduce using rule 12 (expression -> expression TIMES expression .)
-    COMMA           reduce using rule 12 (expression -> expression TIMES expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
+  ! shift/reduce conflict for NEWLINE resolved as shift
+    DEF             reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    IDENTIFIER      reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    NUMBER          reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    PRINT           reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    STRING          reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    $end            reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .)
+    NEWLINE         shift and go to state 34
+    PLUS            shift and go to state 17
+    MINUS           shift and go to state 18
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
 
-  ! PLUS            [ reduce using rule 12 (expression -> expression TIMES expression .) ]
-  ! MINUS           [ reduce using rule 12 (expression -> expression TIMES expression .) ]
-  ! TIMES           [ reduce using rule 12 (expression -> expression TIMES expression .) ]
-  ! DIVIDE          [ reduce using rule 12 (expression -> expression TIMES expression .) ]
+  ! NEWLINE         [ reduce using rule 8 (statement -> IDENTIFIER EQUALS expression .) ]
 
 
 state 25
 
-    (13) expression -> expression DIVIDE expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (21) expression -> IDENTIFIER LPAREN args . RPAREN
+    (24) args -> args . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-    NEWLINE         reduce using rule 13 (expression -> expression DIVIDE expression .)
-    DEF             reduce using rule 13 (expression -> expression DIVIDE expression .)
-    NUMBER          reduce using rule 13 (expression -> expression DIVIDE expression .)
-    IDENTIFIER      reduce using rule 13 (expression -> expression DIVIDE expression .)
-    PRINT           reduce using rule 13 (expression -> expression DIVIDE expression .)
-    STRING          reduce using rule 13 (expression -> expression DIVIDE expression .)
-    $end            reduce using rule 13 (expression -> expression DIVIDE expression .)
-    RPAREN          reduce using rule 13 (expression -> expression DIVIDE expression .)
-    COMMA           reduce using rule 13 (expression -> expression DIVIDE expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
-
-  ! PLUS            [ reduce using rule 13 (expression -> expression DIVIDE expression .) ]
-  ! MINUS           [ reduce using rule 13 (expression -> expression DIVIDE expression .) ]
-  ! TIMES           [ reduce using rule 13 (expression -> expression DIVIDE expression .) ]
-  ! DIVIDE          [ reduce using rule 13 (expression -> expression DIVIDE expression .) ]
+    RPAREN          shift and go to state 35
+    COMMA           shift and go to state 36
 
 
 state 26
 
-    (17) expression -> PRINT LPAREN args . RPAREN
-    (19) args -> args . COMMA expression
+    (25) args -> expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    RPAREN          shift and go to state 31
-    COMMA           shift and go to state 30
+    RPAREN          reduce using rule 25 (args -> expression .)
+    COMMA           reduce using rule 25 (args -> expression .)
+    PLUS            shift and go to state 17
+    MINUS           shift and go to state 18
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
 
 
 state 27
 
-    (8) params -> IDENTIFIER .
+    (15) expression -> expression PLUS expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    RPAREN          reduce using rule 8 (params -> IDENTIFIER .)
-    COMMA           reduce using rule 8 (params -> IDENTIFIER .)
+    NEWLINE         reduce using rule 15 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 15 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 15 (expression -> expression PLUS expression .)
+    DEF             reduce using rule 15 (expression -> expression PLUS expression .)
+    IDENTIFIER      reduce using rule 15 (expression -> expression PLUS expression .)
+    NUMBER          reduce using rule 15 (expression -> expression PLUS expression .)
+    PRINT           reduce using rule 15 (expression -> expression PLUS expression .)
+    STRING          reduce using rule 15 (expression -> expression PLUS expression .)
+    $end            reduce using rule 15 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 15 (expression -> expression PLUS expression .)
+    COMMA           reduce using rule 15 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
+
+  ! TIMES           [ reduce using rule 15 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 15 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 17 ]
+  ! MINUS           [ shift and go to state 18 ]
 
 
 state 28
 
-    (4) statement -> DEF IDENTIFIER LPAREN params . RPAREN COLON NEWLINE
-    (7) params -> params . COMMA IDENTIFIER
+    (16) expression -> expression MINUS expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    RPAREN          shift and go to state 32
-    COMMA           shift and go to state 33
+    NEWLINE         reduce using rule 16 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 16 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 16 (expression -> expression MINUS expression .)
+    DEF             reduce using rule 16 (expression -> expression MINUS expression .)
+    IDENTIFIER      reduce using rule 16 (expression -> expression MINUS expression .)
+    NUMBER          reduce using rule 16 (expression -> expression MINUS expression .)
+    PRINT           reduce using rule 16 (expression -> expression MINUS expression .)
+    STRING          reduce using rule 16 (expression -> expression MINUS expression .)
+    $end            reduce using rule 16 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 16 (expression -> expression MINUS expression .)
+    COMMA           reduce using rule 16 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
+
+  ! TIMES           [ reduce using rule 16 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 16 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 17 ]
+  ! MINUS           [ shift and go to state 18 ]
 
 
 state 29
 
-    (16) expression -> IDENTIFIER LPAREN args RPAREN .
+    (17) expression -> expression TIMES expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    NEWLINE         reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    PLUS            reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    MINUS           reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    TIMES           reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    DIVIDE          reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    DEF             reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    NUMBER          reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    IDENTIFIER      reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    PRINT           reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    STRING          reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    $end            reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    RPAREN          reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
-    COMMA           reduce using rule 16 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    NEWLINE         reduce using rule 17 (expression -> expression TIMES expression .)
+    PLUS            reduce using rule 17 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 17 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 17 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 17 (expression -> expression TIMES expression .)
+    DEF             reduce using rule 17 (expression -> expression TIMES expression .)
+    IDENTIFIER      reduce using rule 17 (expression -> expression TIMES expression .)
+    NUMBER          reduce using rule 17 (expression -> expression TIMES expression .)
+    PRINT           reduce using rule 17 (expression -> expression TIMES expression .)
+    STRING          reduce using rule 17 (expression -> expression TIMES expression .)
+    $end            reduce using rule 17 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 17 (expression -> expression TIMES expression .)
+    COMMA           reduce using rule 17 (expression -> expression TIMES expression .)
+
+  ! PLUS            [ shift and go to state 17 ]
+  ! MINUS           [ shift and go to state 18 ]
+  ! TIMES           [ shift and go to state 19 ]
+  ! DIVIDE          [ shift and go to state 20 ]
 
 
 state 30
 
-    (19) args -> args COMMA . expression
-    (10) expression -> . expression PLUS expression
-    (11) expression -> . expression MINUS expression
-    (12) expression -> . expression TIMES expression
-    (13) expression -> . expression DIVIDE expression
-    (14) expression -> . NUMBER
-    (15) expression -> . IDENTIFIER
-    (16) expression -> . IDENTIFIER LPAREN args RPAREN
-    (17) expression -> . PRINT LPAREN args RPAREN
-    (18) expression -> . STRING
+    (18) expression -> expression DIVIDE expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
 
-    NUMBER          shift and go to state 7
-    IDENTIFIER      shift and go to state 5
-    PRINT           shift and go to state 8
-    STRING          shift and go to state 9
+    NEWLINE         reduce using rule 18 (expression -> expression DIVIDE expression .)
+    PLUS            reduce using rule 18 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 18 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 18 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 18 (expression -> expression DIVIDE expression .)
+    DEF             reduce using rule 18 (expression -> expression DIVIDE expression .)
+    IDENTIFIER      reduce using rule 18 (expression -> expression DIVIDE expression .)
+    NUMBER          reduce using rule 18 (expression -> expression DIVIDE expression .)
+    PRINT           reduce using rule 18 (expression -> expression DIVIDE expression .)
+    STRING          reduce using rule 18 (expression -> expression DIVIDE expression .)
+    $end            reduce using rule 18 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 18 (expression -> expression DIVIDE expression .)
+    COMMA           reduce using rule 18 (expression -> expression DIVIDE expression .)
 
-    expression                     shift and go to state 34
+  ! PLUS            [ shift and go to state 17 ]
+  ! MINUS           [ shift and go to state 18 ]
+  ! TIMES           [ shift and go to state 19 ]
+  ! DIVIDE          [ shift and go to state 20 ]
+
 
 state 31
 
-    (17) expression -> PRINT LPAREN args RPAREN .
+    (22) expression -> PRINT LPAREN args . RPAREN
+    (24) args -> args . COMMA expression
 
-    NEWLINE         reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    PLUS            reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    MINUS           reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    TIMES           reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    DIVIDE          reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    DEF             reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    NUMBER          reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    IDENTIFIER      reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    PRINT           reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    STRING          reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    $end            reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    RPAREN          reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
-    COMMA           reduce using rule 17 (expression -> PRINT LPAREN args RPAREN .)
+    RPAREN          shift and go to state 37
+    COMMA           shift and go to state 36
 
 
 state 32
 
-    (4) statement -> DEF IDENTIFIER LPAREN params RPAREN . COLON NEWLINE
+    (13) params -> IDENTIFIER .
 
-    COLON           shift and go to state 35
+    RPAREN          reduce using rule 13 (params -> IDENTIFIER .)
+    COMMA           reduce using rule 13 (params -> IDENTIFIER .)
 
 
 state 33
 
-    (7) params -> params COMMA . IDENTIFIER
+    (7) statement -> DEF IDENTIFIER LPAREN params . RPAREN COLON NEWLINE
+    (12) params -> params . COMMA IDENTIFIER
 
-    IDENTIFIER      shift and go to state 36
+    RPAREN          shift and go to state 38
+    COMMA           shift and go to state 39
 
 
 state 34
 
-    (19) args -> args COMMA expression .
-    (10) expression -> expression . PLUS expression
-    (11) expression -> expression . MINUS expression
-    (12) expression -> expression . TIMES expression
-    (13) expression -> expression . DIVIDE expression
+    (9) statement -> IDENTIFIER EQUALS expression NEWLINE .
 
-    RPAREN          reduce using rule 19 (args -> args COMMA expression .)
-    COMMA           reduce using rule 19 (args -> args COMMA expression .)
-    PLUS            shift and go to state 14
-    MINUS           shift and go to state 15
-    TIMES           shift and go to state 16
-    DIVIDE          shift and go to state 17
+    NEWLINE         reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    DEF             reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    IDENTIFIER      reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    NUMBER          reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    PRINT           reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    STRING          reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
+    $end            reduce using rule 9 (statement -> IDENTIFIER EQUALS expression NEWLINE .)
 
 
 state 35
 
-    (4) statement -> DEF IDENTIFIER LPAREN params RPAREN COLON . NEWLINE
+    (21) expression -> IDENTIFIER LPAREN args RPAREN .
 
-    NEWLINE         shift and go to state 37
+    NEWLINE         reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    PLUS            reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    MINUS           reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    TIMES           reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    DIVIDE          reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    DEF             reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    IDENTIFIER      reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    NUMBER          reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    PRINT           reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    STRING          reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    $end            reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    RPAREN          reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
+    COMMA           reduce using rule 21 (expression -> IDENTIFIER LPAREN args RPAREN .)
 
 
 state 36
 
-    (7) params -> params COMMA IDENTIFIER .
+    (24) args -> args COMMA . expression
+    (15) expression -> . expression PLUS expression
+    (16) expression -> . expression MINUS expression
+    (17) expression -> . expression TIMES expression
+    (18) expression -> . expression DIVIDE expression
+    (19) expression -> . NUMBER
+    (20) expression -> . IDENTIFIER
+    (21) expression -> . IDENTIFIER LPAREN args RPAREN
+    (22) expression -> . PRINT LPAREN args RPAREN
+    (23) expression -> . STRING
 
-    RPAREN          reduce using rule 7 (params -> params COMMA IDENTIFIER .)
-    COMMA           reduce using rule 7 (params -> params COMMA IDENTIFIER .)
+    NUMBER          shift and go to state 8
+    IDENTIFIER      shift and go to state 23
+    PRINT           shift and go to state 9
+    STRING          shift and go to state 10
 
+    expression                     shift and go to state 40
 
 state 37
 
-    (4) statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .
+    (22) expression -> PRINT LPAREN args RPAREN .
 
-    DEF             reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
-    NUMBER          reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
-    IDENTIFIER      reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
-    PRINT           reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
-    STRING          reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
-    $end            reduce using rule 4 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    NEWLINE         reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    PLUS            reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    MINUS           reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    TIMES           reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    DIVIDE          reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    DEF             reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    IDENTIFIER      reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    NUMBER          reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    PRINT           reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    STRING          reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    $end            reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    RPAREN          reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+    COMMA           reduce using rule 22 (expression -> PRINT LPAREN args RPAREN .)
+
+
+state 38
+
+    (7) statement -> DEF IDENTIFIER LPAREN params RPAREN . COLON NEWLINE
+
+    COLON           shift and go to state 41
+
+
+state 39
+
+    (12) params -> params COMMA . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 42
+
+
+state 40
+
+    (24) args -> args COMMA expression .
+    (15) expression -> expression . PLUS expression
+    (16) expression -> expression . MINUS expression
+    (17) expression -> expression . TIMES expression
+    (18) expression -> expression . DIVIDE expression
+
+    RPAREN          reduce using rule 24 (args -> args COMMA expression .)
+    COMMA           reduce using rule 24 (args -> args COMMA expression .)
+    PLUS            shift and go to state 17
+    MINUS           shift and go to state 18
+    TIMES           shift and go to state 19
+    DIVIDE          shift and go to state 20
+
+
+state 41
+
+    (7) statement -> DEF IDENTIFIER LPAREN params RPAREN COLON . NEWLINE
+
+    NEWLINE         shift and go to state 43
+
+
+state 42
+
+    (12) params -> params COMMA IDENTIFIER .
+
+    RPAREN          reduce using rule 12 (params -> params COMMA IDENTIFIER .)
+    COMMA           reduce using rule 12 (params -> params COMMA IDENTIFIER .)
+
+
+state 43
+
+    (7) statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .
+
+    NEWLINE         reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    DEF             reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    IDENTIFIER      reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    NUMBER          reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    PRINT           reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    STRING          reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
+    $end            reduce using rule 7 (statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 22 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 22 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 22 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 22 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 23 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 23 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 23 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 23 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 24 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 24 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 24 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 24 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 25 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 25 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 25 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 25 resolved as shift
+WARNING: shift/reduce conflict for NEWLINE in state 7 resolved as shift
+WARNING: shift/reduce conflict for NEWLINE in state 24 resolved as shift

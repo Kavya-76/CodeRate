@@ -6,6 +6,12 @@ import sys
 # Get tokens from the lexer module
 tokens = lexer_module.tokens
 
+# Define operator precedence and associativity
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
+)
+
 # A simple AST structure
 class ASTNode:
     def __init__(self, type, children=None, value=None):
@@ -18,12 +24,26 @@ class ASTNode:
 
 # Grammar rules
 def p_program(p):
-    '''program : statements'''
-    p[0] = ASTNode("Program", children=p[1])
+    '''program : statements
+               | empty'''
+    if p[1] is None:
+        p[0] = ASTNode("Program", children=[])
+    else:
+        p[0] = ASTNode("Program", children=p[1])
+
+def p_empty(p):
+    '''empty :'''
+    pass
 
 def p_statements_multiple(p):
-    '''statements : statements statement'''
-    p[0] = p[1] + [p[2]]
+    '''statements : statements statement
+                  | statements NEWLINE'''
+    if len(p) == 3 and p[2] is not None and hasattr(p[2], 'type'):
+        # It's a statement
+        p[0] = p[1] + [p[2]]
+    else:
+        # It's just a newline, ignore it
+        p[0] = p[1]
 
 def p_statements_single(p):
     '''statements : statement'''
@@ -32,6 +52,11 @@ def p_statements_single(p):
 def p_statement_func(p):
     '''statement : DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE'''
     p[0] = ASTNode("FunctionDecl", value=p[2], children=p[4])
+
+def p_statement_assignment(p):
+    '''statement : IDENTIFIER EQUALS expression
+                 | IDENTIFIER EQUALS expression NEWLINE'''
+    p[0] = ASTNode("Assignment", value=p[1], children=[p[3]])
 
 def p_statement_expr(p):
     '''statement : expression

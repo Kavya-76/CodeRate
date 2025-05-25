@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AS CLASS COLON COMMA DEF DIVIDE ELSE EQUALS FALSE FOR FROM IDENTIFIER IF IMPORT IN LPAREN MINUS NEWLINE NONE NUMBER PLUS PRINT RANGE RETURN RPAREN STRING TIMES TRUE WHILEprogram : statementsstatements : statements statementstatements : statementstatement : DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINEstatement : expression\n                 | expression NEWLINEparams : params COMMA IDENTIFIERparams : IDENTIFIERparams : expression : expression PLUS expression\n                  | expression MINUS expression\n                  | expression TIMES expression\n                  | expression DIVIDE expressionexpression : NUMBERexpression : IDENTIFIERexpression : IDENTIFIER LPAREN args RPARENexpression : PRINT LPAREN args RPARENexpression : STRINGargs : args COMMA expressionargs : expressionargs : '
+_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDEAS CLASS COLON COMMA DEF DIVIDE ELSE EQUALS FALSE FOR FROM IDENTIFIER IF IMPORT IN LPAREN MINUS NEWLINE NONE NUMBER PLUS PRINT RANGE RETURN RPAREN STRING TIMES TRUE WHILEprogram : statements\n               | emptyempty :statements : statements statement\n                  | statements NEWLINEstatements : statementstatement : DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINEstatement : IDENTIFIER EQUALS expression\n                 | IDENTIFIER EQUALS expression NEWLINEstatement : expression\n                 | expression NEWLINEparams : params COMMA IDENTIFIERparams : IDENTIFIERparams : expression : expression PLUS expression\n                  | expression MINUS expression\n                  | expression TIMES expression\n                  | expression DIVIDE expressionexpression : NUMBERexpression : IDENTIFIERexpression : IDENTIFIER LPAREN args RPARENexpression : PRINT LPAREN args RPARENexpression : STRINGargs : args COMMA expressionargs : expressionargs : '
     
-_lr_action_items = {'DEF':([0,2,3,5,6,7,9,10,13,22,23,24,25,29,31,37,],[4,4,-3,-15,-5,-14,-18,-2,-6,-10,-11,-12,-13,-16,-17,-4,]),'NUMBER':([0,2,3,5,6,7,9,10,12,13,14,15,16,17,18,22,23,24,25,29,30,31,37,],[7,7,-3,-15,-5,-14,-18,-2,7,-6,7,7,7,7,7,-10,-11,-12,-13,-16,7,-17,-4,]),'IDENTIFIER':([0,2,3,4,5,6,7,9,10,12,13,14,15,16,17,18,19,22,23,24,25,29,30,31,33,37,],[5,5,-3,11,-15,-5,-14,-18,-2,5,-6,5,5,5,5,5,27,-10,-11,-12,-13,-16,5,-17,36,-4,]),'PRINT':([0,2,3,5,6,7,9,10,12,13,14,15,16,17,18,22,23,24,25,29,30,31,37,],[8,8,-3,-15,-5,-14,-18,-2,8,-6,8,8,8,8,8,-10,-11,-12,-13,-16,8,-17,-4,]),'STRING':([0,2,3,5,6,7,9,10,12,13,14,15,16,17,18,22,23,24,25,29,30,31,37,],[9,9,-3,-15,-5,-14,-18,-2,9,-6,9,9,9,9,9,-10,-11,-12,-13,-16,9,-17,-4,]),'$end':([1,2,3,5,6,7,9,10,13,22,23,24,25,29,31,37,],[0,-1,-3,-15,-5,-14,-18,-2,-6,-10,-11,-12,-13,-16,-17,-4,]),'NEWLINE':([5,6,7,9,22,23,24,25,29,31,35,],[-15,13,-14,-18,-10,-11,-12,-13,-16,-17,37,]),'PLUS':([5,6,7,9,21,22,23,24,25,29,31,34,],[-15,14,-14,-18,14,14,14,14,14,-16,-17,14,]),'MINUS':([5,6,7,9,21,22,23,24,25,29,31,34,],[-15,15,-14,-18,15,15,15,15,15,-16,-17,15,]),'TIMES':([5,6,7,9,21,22,23,24,25,29,31,34,],[-15,16,-14,-18,16,16,16,16,16,-16,-17,16,]),'DIVIDE':([5,6,7,9,21,22,23,24,25,29,31,34,],[-15,17,-14,-18,17,17,17,17,17,-16,-17,17,]),'RPAREN':([5,7,9,12,18,19,20,21,22,23,24,25,26,27,28,29,31,34,36,],[-15,-14,-18,-21,-21,-9,29,-20,-10,-11,-12,-13,31,-8,32,-16,-17,-19,-7,]),'COMMA':([5,7,9,12,18,19,20,21,22,23,24,25,26,27,28,29,31,34,36,],[-15,-14,-18,-21,-21,-9,30,-20,-10,-11,-12,-13,30,-8,33,-16,-17,-19,-7,]),'LPAREN':([5,8,11,],[12,18,19,]),'COLON':([32,],[35,]),}
+_lr_action_items = {'$end':([0,1,2,3,4,6,7,8,10,11,12,16,23,24,27,28,29,30,34,35,37,43,],[-3,0,-1,-2,-6,-20,-10,-19,-23,-4,-5,-11,-20,-8,-15,-16,-17,-18,-9,-21,-22,-7,]),'DEF':([0,2,4,6,7,8,10,11,12,16,23,24,27,28,29,30,34,35,37,43,],[5,5,-6,-20,-10,-19,-23,-4,-5,-11,-20,-8,-15,-16,-17,-18,-9,-21,-22,-7,]),'IDENTIFIER':([0,2,4,5,6,7,8,10,11,12,14,15,16,17,18,19,20,21,22,23,24,27,28,29,30,34,35,36,37,39,43,],[6,6,-6,13,-20,-10,-19,-23,-4,-5,23,23,-11,23,23,23,23,23,32,-20,-8,-15,-16,-17,-18,-9,-21,23,-22,42,-7,]),'NUMBER':([0,2,4,6,7,8,10,11,12,14,15,16,17,18,19,20,21,23,24,27,28,29,30,34,35,36,37,43,],[8,8,-6,-20,-10,-19,-23,-4,-5,8,8,-11,8,8,8,8,8,-20,-8,-15,-16,-17,-18,-9,-21,8,-22,-7,]),'PRINT':([0,2,4,6,7,8,10,11,12,14,15,16,17,18,19,20,21,23,24,27,28,29,30,34,35,36,37,43,],[9,9,-6,-20,-10,-19,-23,-4,-5,9,9,-11,9,9,9,9,9,-20,-8,-15,-16,-17,-18,-9,-21,9,-22,-7,]),'STRING':([0,2,4,6,7,8,10,11,12,14,15,16,17,18,19,20,21,23,24,27,28,29,30,34,35,36,37,43,],[10,10,-6,-20,-10,-19,-23,-4,-5,10,10,-11,10,10,10,10,10,-20,-8,-15,-16,-17,-18,-9,-21,10,-22,-7,]),'NEWLINE':([2,4,6,7,8,10,11,12,16,23,24,27,28,29,30,34,35,37,41,43,],[12,-6,-20,16,-19,-23,-4,-5,-11,-20,34,-15,-16,-17,-18,-9,-21,-22,43,-7,]),'EQUALS':([6,],[14,]),'PLUS':([6,7,8,10,23,24,26,27,28,29,30,35,37,40,],[-20,17,-19,-23,-20,17,17,-15,-16,-17,-18,-21,-22,17,]),'MINUS':([6,7,8,10,23,24,26,27,28,29,30,35,37,40,],[-20,18,-19,-23,-20,18,18,-15,-16,-17,-18,-21,-22,18,]),'TIMES':([6,7,8,10,23,24,26,27,28,29,30,35,37,40,],[-20,19,-19,-23,-20,19,19,19,19,-17,-18,-21,-22,19,]),'DIVIDE':([6,7,8,10,23,24,26,27,28,29,30,35,37,40,],[-20,20,-19,-23,-20,20,20,20,20,-17,-18,-21,-22,20,]),'LPAREN':([6,9,13,23,],[15,21,22,15,]),'RPAREN':([8,10,15,21,22,23,25,26,27,28,29,30,31,32,33,35,37,40,42,],[-19,-23,-26,-26,-14,-20,35,-25,-15,-16,-17,-18,37,-13,38,-21,-22,-24,-12,]),'COMMA':([8,10,15,21,22,23,25,26,27,28,29,30,31,32,33,35,37,40,42,],[-19,-23,-26,-26,-14,-20,36,-25,-15,-16,-17,-18,36,-13,39,-21,-22,-24,-12,]),'COLON':([38,],[41,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'statements':([0,],[2,]),'statement':([0,2,],[3,10,]),'expression':([0,2,12,14,15,16,17,18,30,],[6,6,21,22,23,24,25,21,34,]),'args':([12,18,],[20,26,]),'params':([19,],[28,]),}
+_lr_goto_items = {'program':([0,],[1,]),'statements':([0,],[2,]),'empty':([0,],[3,]),'statement':([0,2,],[4,11,]),'expression':([0,2,14,15,17,18,19,20,21,36,],[7,7,24,26,27,28,29,30,26,40,]),'args':([15,21,],[25,31,]),'params':([22,],[33,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,25 +27,30 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> statements','program',1,'p_program','parser.py',21),
-  ('statements -> statements statement','statements',2,'p_statements_multiple','parser.py',25),
-  ('statements -> statement','statements',1,'p_statements_single','parser.py',29),
-  ('statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE','statement',7,'p_statement_func','parser.py',33),
-  ('statement -> expression','statement',1,'p_statement_expr','parser.py',37),
-  ('statement -> expression NEWLINE','statement',2,'p_statement_expr','parser.py',38),
-  ('params -> params COMMA IDENTIFIER','params',3,'p_params_multiple','parser.py',42),
-  ('params -> IDENTIFIER','params',1,'p_params_single','parser.py',46),
-  ('params -> <empty>','params',0,'p_params_empty','parser.py',50),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','parser.py',54),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','parser.py',55),
-  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','parser.py',56),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','parser.py',57),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',61),
-  ('expression -> IDENTIFIER','expression',1,'p_expression_var','parser.py',65),
-  ('expression -> IDENTIFIER LPAREN args RPAREN','expression',4,'p_expression_call','parser.py',69),
-  ('expression -> PRINT LPAREN args RPAREN','expression',4,'p_expression_print','parser.py',73),
-  ('expression -> STRING','expression',1,'p_expression_string','parser.py',77),
-  ('args -> args COMMA expression','args',3,'p_args_multiple','parser.py',81),
-  ('args -> expression','args',1,'p_args_single','parser.py',85),
-  ('args -> <empty>','args',0,'p_args_empty','parser.py',89),
+  ('program -> statements','program',1,'p_program','parser.py',27),
+  ('program -> empty','program',1,'p_program','parser.py',28),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',35),
+  ('statements -> statements statement','statements',2,'p_statements_multiple','parser.py',39),
+  ('statements -> statements NEWLINE','statements',2,'p_statements_multiple','parser.py',40),
+  ('statements -> statement','statements',1,'p_statements_single','parser.py',49),
+  ('statement -> DEF IDENTIFIER LPAREN params RPAREN COLON NEWLINE','statement',7,'p_statement_func','parser.py',53),
+  ('statement -> IDENTIFIER EQUALS expression','statement',3,'p_statement_assignment','parser.py',57),
+  ('statement -> IDENTIFIER EQUALS expression NEWLINE','statement',4,'p_statement_assignment','parser.py',58),
+  ('statement -> expression','statement',1,'p_statement_expr','parser.py',62),
+  ('statement -> expression NEWLINE','statement',2,'p_statement_expr','parser.py',63),
+  ('params -> params COMMA IDENTIFIER','params',3,'p_params_multiple','parser.py',67),
+  ('params -> IDENTIFIER','params',1,'p_params_single','parser.py',71),
+  ('params -> <empty>','params',0,'p_params_empty','parser.py',75),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','parser.py',79),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','parser.py',80),
+  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','parser.py',81),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','parser.py',82),
+  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',86),
+  ('expression -> IDENTIFIER','expression',1,'p_expression_var','parser.py',90),
+  ('expression -> IDENTIFIER LPAREN args RPAREN','expression',4,'p_expression_call','parser.py',94),
+  ('expression -> PRINT LPAREN args RPAREN','expression',4,'p_expression_print','parser.py',98),
+  ('expression -> STRING','expression',1,'p_expression_string','parser.py',102),
+  ('args -> args COMMA expression','args',3,'p_args_multiple','parser.py',106),
+  ('args -> expression','args',1,'p_args_single','parser.py',110),
+  ('args -> <empty>','args',0,'p_args_empty','parser.py',114),
 ]

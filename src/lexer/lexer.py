@@ -76,6 +76,7 @@ def t_error(t):
 lexer = lex.lex()
 
 def perform_lexical_analysis(code):
+    # print("The code is ",code)
     lexer = lex.lex(module=sys.modules[__name__])
     lexer.input(code)
     tokens_list = []

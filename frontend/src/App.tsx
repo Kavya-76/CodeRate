@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Button } from "./components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { CodeEditor } from "@/components/CodeEditor";
 import { CodeShortcuts } from "@/components/CodeShortcuts";
 import { AnalysisResults } from "@/components/AnalysisResults";
-import { toast } from "sonner";
+import { toast } from "sonner"
 import { Code, Play, Sparkles } from "lucide-react";
 import axios from "axios"
 import "./App.css";
@@ -46,12 +44,22 @@ function App() {
       const result = await axios.post("http://127.0.0.1:5000/api/analyze", {
         code: code
       })
+
       console.log(result.data)
+      if(result.data.status=='error') {
+        toast("Error in syntax");
+      }
       setAnalysisResult(result.data);
       toast.success("Code analysis completed successfully!");
     } catch (error) {
-      toast.error("Failed to analyze code. Please try again.");
-      console.error("Analysis error:", error);
+      // toast.error("Failed to analyze code. Pl  ease try again.");
+      if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+        console.error("Analysis error:", error.response.data);
+      } else {
+        toast.error("Failed to analyze code. Please try again.");
+        console.error("Analysis error:", error);
+      }
     } finally {
       setIsAnalyzing(false);
     }
