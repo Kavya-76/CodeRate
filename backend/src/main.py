@@ -1,5 +1,3 @@
-# src/main.py
-
 import os
 import logging
 from flask import Flask, request, jsonify
@@ -69,12 +67,18 @@ def create_app():
     def home():
         return jsonify({"message": "Code Scorer API is running"}), 200
 
+    @app.route('/health')
+    def health():
+        return jsonify({"status": "healthy"}), 200
+
     return app
 
+# Create the app instance
+app = create_app()
+
 if __name__ == "__main__":
+    # For local development
     host = os.getenv("HOST", "127.0.0.1")
     port = int(os.getenv("PORT", 5000))
     debug = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
-
-    app = create_app()
     app.run(host=host, port=port, debug=debug)
