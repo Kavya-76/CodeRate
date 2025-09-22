@@ -1,132 +1,81 @@
-# src/semantic/semantic_analyzer.py
+# semantic/semantic_analyzer.py
+import ast
 
-class SemanticContext:
+class SemanticAnalyzer(ast.NodeVisitor):
+    """
+    Visits AST nodes to perform semantic checks, such as checking for
+    undefined variables.
+    """
     def __init__(self):
-        self.symbols = {}  # Stores variables/functions
-        self.errors = []
-        self.builtin_functions = {
-            'print': {'type': 'builtin', 'params': -1},  # -1 means variable args
-            'range': {'type': 'builtin', 'params': -1},
-            'len': {'type': 'builtin', 'params': 1},
+        # --- THIS IS THE FIX ---
+        # A set of common built-in functions and types.
+        built_in_names = {
+            'print', 'len', 'range', 'int', 'str', 'list', 
+            'dict', 'set', 'tuple', 'abs', 'max', 'min', 'sum'
         }
+        # The global scope (the first item in our scope stack)
+        # now starts pre-populated with these built-in names.
+        self.scopes = [{name: 'BUILTIN' for name in built_in_names}]
+        self.errors = []
+        # --- END OF FIX ---
 
-    def define(self, name, value):
-        if name in self.symbols:
-            self.errors.append(f"Duplicate identifier: {name}")
-        else:
-            self.symbols[name] = value
-
-    def resolve(self, name):
-        if name not in self.symbols and name not in self.builtin_functions:
-            self.errors.append(f"Undefined identifier: {name}")
-            return None
-        return self.symbols.get(name) or self.builtin_functions.get(name)
-
-    def is_function(self, name):
-        symbol = self.resolve(name)
-        return symbol and symbol.get('type') in ['function', 'builtin']
-
-def analyze_node(node, context):
-    if not node:
-        return
+    def visit_FunctionDef(self, node):
+        # Define the function's name in the current (outer) scope.
+        self.scopes[-1][node.name] = 'FUNCTION'
         
-    if node.type == "Program":
-        for stmt in node.children:
-            analyze_node(stmt, context)
-
-    elif node.type == "FunctionDecl":
-        func_name = node.value
-        params = [param.value for param in node.children if param.type == "Param"]
-        context.define(func_name, {"type": "function", "params": params})
+        # Create a new, empty scope for the function's body.
+        self.scopes.append({})
         
-        # Analyze function parameters in a new scope (simplified)
-        for param in node.children:
-            if param.type == "Param":
-                analyze_node(param, context)
-
-    elif node.type == "Assignment":
-        var_name = node.value
-        # Analyze the right-hand side expression first
-        if node.children:
-            analyze_node(node.children[0], context)
-        # Define/update the variable
-        context.define(var_name, {"type": "variable"})
-
-    elif node.type == "ExpressionStatement":
-        for child in node.children:
-            analyze_node(child, context)
-
-    elif node.type == "BinOp":
-        # Analyze both operands
-        if len(node.children) >= 2:
-            analyze_node(node.children[0], context)
-            analyze_node(node.children[1], context)
-        else:
-            context.errors.append("Binary operation missing operands")
-
-    elif node.type == "Variable":
-        context.resolve(node.value)
-
-    elif node.type == "FunctionCall":
-        func_name = node.value
-        args = node.children
+        # Add all function arguments to this new inner scope.
+        for arg in node.args.args:
+            self.scopes[-1][arg.arg] = 'VARIABLE'
+            
+        # Visit all nodes inside the function.
+        self.generic_visit(node)
         
-        # Check if function exists
-        func_info = context.resolve(func_name)
-        if func_info:
-            # Check argument count for user-defined functions
-            if func_info.get('type') == 'function':
-                expected_params = func_info.get('params', [])
-                if len(expected_params) != len(args):
-                    context.errors.append(
-                        f"Function '{func_name}' expects {len(expected_params)} arguments, got {len(args)}"
-                    )
-            # For builtin functions with variable args, we're more lenient
-            elif func_info.get('type') == 'builtin':
-                expected_count = func_info.get('params', -1)
-                if expected_count > 0 and len(args) != expected_count:
-                    context.errors.append(
-                        f"Builtin function '{func_name}' expects {expected_count} arguments, got {len(args)}"
-                    )
+        # Once we're done with the function, pop its scope off the stack.
+        self.scopes.pop()
+
+    def visit_Assign(self, node):
+        # First, visit the right-hand side of the assignment to ensure
+        # any variables used there are already defined.
+        self.visit(node.value)
+
+        # Then, define the new variable(s) in the current scope.
+        for target in node.targets:
+            if isinstance(target, ast.Name):
+                self.scopes[-1][target.id] = 'VARIABLE'
+
+    def visit_Name(self, node):
+        # This method is called whenever a variable name is used.
+        # We only care when a variable is being loaded/read.
+        if isinstance(node.ctx, ast.Load):
+            found = False
+            # Check for the name in all scopes, from innermost to outermost.
+            for scope in reversed(self.scopes):
+                if node.id in scope:
+                    found = True
+                    break
+            
+            # --- SIMPLIFIED CHECK ---
+            # If the name was not found in any scope (including our
+            # built-ins), then it's an undefined variable.
+            if not found:
+                self.errors.append(
+                    f"Semantic Error: Name '{node.id}' is not defined."
+                )
         
-        # Analyze all arguments
-        for arg in args:
-            analyze_node(arg, context)
+        # Continue visiting other nodes.
+        self.generic_visit(node)
 
-    elif node.type == "PrintCall":
-        # Handle print statements specifically
-        for arg in node.children:
-            analyze_node(arg, context)
-
-    elif node.type == "Number":
-        pass  # Numbers are always valid
-
-    elif node.type == "String":
-        pass  # Strings are always valid
-
-    elif node.type == "Param":
-        # Define parameter in current scope
-        context.define(node.value, {"type": "param"})
-
-    else:
-        # Handle unknown node types gracefully
-        context.errors.append(f"Unknown AST node type: {node.type}")
-        # Still try to analyze children if they exist
-        if hasattr(node, 'children') and node.children:
-            for child in node.children:
-                analyze_node(child, context)
-
-def perform_semantic_analysis(ast):
+def perform_semantic_analysis(ast_tree):
     """
-    Performs semantic analysis on the given AST and returns a list of errors.
+    Performs semantic analysis on the given official AST.
+    Returns a list of errors found.
     """
-    if not ast:
-        return ["No AST provided for semantic analysis"]
+    if not ast_tree:
+        return ["No AST provided for semantic analysis."]
     
-    context = SemanticContext()
-    try:
-        analyze_node(ast, context)
-    except Exception as e:
-        context.errors.append(f"Semantic analysis error: {str(e)}")
-    
-    return context.errors
+    analyzer = SemanticAnalyzer()
+    analyzer.visit(ast_tree)
+    return analyzer.errors

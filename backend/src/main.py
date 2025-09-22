@@ -31,6 +31,7 @@ def create_app():
             logging.info("Received code for analysis.")
 
             result = evaluate_code(code)
+            print(result)
 
             if result["status"] == "success":
                 return jsonify({

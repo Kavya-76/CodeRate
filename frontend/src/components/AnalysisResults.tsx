@@ -12,7 +12,7 @@ interface AnalysisResult {
   features: {
     function_count: number;
     variable_count: number;
-    binop_count: number;
+    binary_operator_count: number;
     avg_param_count: number;
     function_call_count: number;
   };
@@ -133,7 +133,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ result, scoreC
                 </div>
                 <div className="bg-gray-800/50 rounded p-3 border border-gray-600">
                   <div className="text-gray-400 text-xs uppercase tracking-wide mb-1">Binary Operations</div>
-                  <div className="text-white text-lg font-semibold">{result.features.binop_count}</div>
+                  <div className="text-white text-lg font-semibold">{result.features.binary_operator_count}</div>
                 </div>
                 <div className="bg-gray-800/50 rounded p-3 border border-gray-600">
                   <div className="text-gray-400 text-xs uppercase tracking-wide mb-1">Function Calls</div>
