@@ -18,7 +18,7 @@ interface AnalysisResult {
   features: {
     function_count: number;
     variable_count: number;
-    binop_count: number;
+    binary_operator_count: number;
     avg_param_count: number;
     function_call_count: number;
   };
